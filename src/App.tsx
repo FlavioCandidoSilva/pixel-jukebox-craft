@@ -13,6 +13,10 @@ import PlaylistView from "./pages/PlaylistView";
 import ArtistView from "./pages/ArtistView";
 import UserProfile from "./pages/UserProfile";
 import NotFound from "./pages/NotFound";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import CreatePlaylist from "./pages/CreatePlaylist";
+import LikedSongs from "./pages/LikedSongs";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +27,9 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          
           <Route element={<Layout />}>
             <Route path="/" element={<Index />} />
             <Route path="/search" element={<Search />} />
@@ -31,7 +38,10 @@ const App = () => (
             <Route path="/playlist/:playlistId" element={<PlaylistView />} />
             <Route path="/artist/:artistId" element={<ArtistView />} />
             <Route path="/profile" element={<UserProfile />} />
+            <Route path="/create-playlist" element={<CreatePlaylist />} />
+            <Route path="/liked-songs" element={<LikedSongs />} />
           </Route>
+          
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

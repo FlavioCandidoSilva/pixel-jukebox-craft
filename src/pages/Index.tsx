@@ -45,6 +45,7 @@ const categories = [
 
 const Index = () => {
   const [currentGreeting, setCurrentGreeting] = useState(greeting());
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   
   useEffect(() => {
     const timer = setInterval(() => {
@@ -57,8 +58,23 @@ const Index = () => {
   return (
     <div className="pb-12">
       {/* Header with greeting */}
-      <header className="mb-8 pt-8">
+      <header className="mb-8 pt-8 flex items-center justify-between">
         <h1 className="text-2xl font-minecraft text-white">{currentGreeting}</h1>
+        
+        {!isLoggedIn && (
+          <div className="flex items-center gap-3">
+            <Link to="/register">
+              <button className="font-minecraft text-xs py-2 px-4 text-gray-300 hover:text-white transition-colors">
+                Sign Up
+              </button>
+            </Link>
+            <Link to="/login">
+              <button className="font-minecraft text-xs pixel-button bg-craft-grass hover:bg-craft-grass/80 text-white border-craft-bedrock">
+                Login
+              </button>
+            </Link>
+          </div>
+        )}
       </header>
       
       {/* Recently played section */}
