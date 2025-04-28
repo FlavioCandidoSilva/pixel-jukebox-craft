@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Play } from "lucide-react";
 import { Link } from "react-router-dom";
 import AlbumCard from "@/components/ui/AlbumCard";
 import PlaylistCard from "@/components/ui/PlaylistCard";
