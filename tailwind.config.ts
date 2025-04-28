@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -18,6 +19,10 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				pixel: ['"Press Start 2P"', 'cursive'],
+				minecraft: ['"Minecraft"', 'sans-serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -52,15 +57,27 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				sidebar: {
-					DEFAULT: 'hsl(var(--sidebar-background))',
-					foreground: 'hsl(var(--sidebar-foreground))',
-					primary: 'hsl(var(--sidebar-primary))',
-					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-					accent: 'hsl(var(--sidebar-accent))',
-					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-					border: 'hsl(var(--sidebar-border))',
-					ring: 'hsl(var(--sidebar-ring))'
+				// Minecraft-inspired colors
+				craft: {
+					dirt: '#866043',
+					grass: '#5D8731',
+					stone: '#7F7F7F',
+					wood: '#A0673C',
+					leaves: '#306430',
+					water: '#3D99F6',
+					lava: '#D86D30',
+					bedrock: '#292929',
+					diamond: '#5DECF5',
+					emerald: '#00D93A',
+					gold: '#FCDC5F',
+					redstone: '#FF0000',
+				},
+				spotify: {
+					green: '#1DB954',
+					black: '#191414',
+					white: '#FFFFFF',
+					lightBlack: '#282828',
+					darkGray: '#121212',
 				}
 			},
 			borderRadius: {
@@ -70,25 +87,25 @@ export default {
 			},
 			keyframes: {
 				'accordion-down': {
-					from: {
-						height: '0'
-					},
-					to: {
-						height: 'var(--radix-accordion-content-height)'
-					}
+					from: { height: '0' },
+					to: { height: 'var(--radix-accordion-content-height)' }
 				},
 				'accordion-up': {
-					from: {
-						height: 'var(--radix-accordion-content-height)'
-					},
-					to: {
-						height: '0'
-					}
+					from: { height: 'var(--radix-accordion-content-height)' },
+					to: { height: '0' }
+				},
+				'pixel-bounce': {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-4px)' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'pixel-bounce': 'pixel-bounce 1s infinite'
+			},
+			backgroundImage: {
+				'pixel-gradient': 'linear-gradient(to bottom right, #121212, #282828)'
 			}
 		}
 	},
