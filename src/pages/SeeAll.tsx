@@ -1,3 +1,4 @@
+
 import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import AlbumCard from "@/components/ui/AlbumCard";
@@ -176,8 +177,7 @@ const SeeAll = () => {
                 artist={song.artist}
                 album={song.album}
                 duration={song.duration}
-                imageSrc={song.imageSrc}
-                imageUrl={song.imageSrc}
+                imageUrl={song.imageUrl}
                 isLiked={song.isLiked}
               />
             ))}

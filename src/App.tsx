@@ -25,12 +25,14 @@ import AddContent from "./pages/AddContent";
 import SeeAllPlaylists from "./pages/SeeAllPlaylists";
 import SeeAllAlbums from "./pages/SeeAllAlbums";
 import SeeAllArtists from "./pages/SeeAllArtists";
+import SeeAll from "./pages/SeeAll";
 import TopMusic from "./pages/TopMusic";
 import AIAssistant from "./pages/AIAssistant";
 import Podcasts from "./pages/Podcasts";
 import ComponentsShowcase from "./pages/ComponentsShowcase";
 import Pricing from "./pages/Pricing";
 import Notifications from "./pages/Notifications";
+import CollaborativePlaylist from "./pages/CollaborativePlaylist";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +59,7 @@ const App = () => (
             <Route path="/liked-songs" element={<LikedSongs />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/add-content" element={<AddContent />} />
+            <Route path="/see-all/:section" element={<SeeAll />} />
             <Route path="/see-all-playlists" element={<SeeAllPlaylists />} />
             <Route path="/see-all-albums" element={<SeeAllAlbums />} />
             <Route path="/see-all-artists" element={<SeeAllArtists />} />
@@ -66,6 +69,7 @@ const App = () => (
             <Route path="/components" element={<ComponentsShowcase />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/notifications" element={<Notifications />} />
+            <Route path="/collaborative/:playlistId" element={<CollaborativePlaylist />} />
             <Route path="/server-error" element={<ServerError />} />
           </Route>
           
