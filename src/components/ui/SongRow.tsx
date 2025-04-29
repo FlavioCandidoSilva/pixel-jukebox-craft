@@ -1,5 +1,12 @@
+
 import React from "react";
 import { Heart, MoreHorizontal, Play } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export interface SongRowProps {
   position?: number;
