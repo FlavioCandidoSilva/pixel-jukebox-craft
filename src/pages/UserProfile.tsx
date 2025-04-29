@@ -16,6 +16,7 @@ const UserProfile = () => {
   const [showFollowers, setShowFollowers] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
   const [showEditProfile, setShowEditProfile] = useState(false);
+  const [showChangeBanner, setShowChangeBanner] = useState(false);
   
   const user = {
     username: "StevePlayer",
@@ -29,18 +30,18 @@ const UserProfile = () => {
   };
   
   const followers = [
-    { id: "1", username: "DiamondMiner", avatarUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475" },
-    { id: "2", username: "CreeperSlayer", avatarUrl: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5" },
-    { id: "3", username: "EnderDragon", avatarUrl: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7" },
-    { id: "4", username: "PiglinTrader", avatarUrl: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b" },
-    { id: "5", username: "VillagerHmm", avatarUrl: "https://images.unsplash.com/photo-1500673922987-e212871fec22" },
+    { id: "1", username: "DiamondMiner", avatarUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475", isFollowing: true },
+    { id: "2", username: "CreeperSlayer", avatarUrl: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5", isFollowing: false },
+    { id: "3", username: "EnderDragon", avatarUrl: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7", isFollowing: true },
+    { id: "4", username: "PiglinTrader", avatarUrl: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b", isFollowing: false },
+    { id: "5", username: "VillagerHmm", avatarUrl: "https://images.unsplash.com/photo-1500673922987-e212871fec22", isFollowing: true },
   ];
   
   const following = [
-    { id: "1", username: "C418Official", avatarUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475" },
-    { id: "2", username: "LenaRaine", avatarUrl: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5" },
-    { id: "3", username: "NoteBlockMaster", avatarUrl: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7" },
-    { id: "4", username: "DiscJockeyCreeper", avatarUrl: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b" },
+    { id: "1", username: "C418Official", avatarUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475", isFollowing: true },
+    { id: "2", username: "LenaRaine", avatarUrl: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5", isFollowing: true },
+    { id: "3", username: "NoteBlockMaster", avatarUrl: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7", isFollowing: true },
+    { id: "4", username: "DiscJockeyCreeper", avatarUrl: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b", isFollowing: true },
   ];
   
   const userPlaylists = [
@@ -58,18 +59,47 @@ const UserProfile = () => {
     { id: "lena-raine", name: "Lena Raine", imageUrl: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5" },
   ];
 
+  const [bannerImage, setBannerImage] = useState(user.bannerUrl);
+  const [avatarImage, setAvatarImage] = useState(user.avatarUrl);
+  const [selectedGenres, setSelectedGenres] = useState(user.favoriteGenres);
+  const allGenres = ["Ambient", "Chiptune", "Electronic", "Soundtrack", "Lo-Fi", "Retro", "Indie", "Rock", "Pop", "Classical", "Jazz", "Hip-Hop"];
+
   const handleEditProfile = (event: React.FormEvent) => {
     event.preventDefault();
-    // Handle profile update logic
     setShowEditProfile(false);
   };
 
-  const handleChangeBanner = () => {
-    // Handle banner upload logic
+  const handleBannerUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        setBannerImage(result);
+        setShowChangeBanner(false);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
-  const handleChangeAvatar = () => {
-    // Handle avatar upload logic
+  const handleAvatarUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        setAvatarImage(result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const toggleGenre = (genre: string) => {
+    if (selectedGenres.includes(genre)) {
+      setSelectedGenres(selectedGenres.filter(g => g !== genre));
+    } else {
+      setSelectedGenres([...selectedGenres, genre]);
+    }
   };
   
   return (
@@ -78,21 +108,30 @@ const UserProfile = () => {
       <div 
         className="relative w-full h-48 bg-gradient-to-b from-craft-dirt/50 to-spotify-darkGray overflow-hidden"
       >
-        {user.bannerUrl && (
+        {bannerImage && (
           <img 
-            src={user.bannerUrl} 
+            src={bannerImage} 
             alt="Profile banner" 
-            className="w-full h-full object-cover opacity-60"
+            className="w-full h-full object-cover opacity-80"
           />
         )}
         
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-spotify-darkGray opacity-80"></div>
+        {/* Banner overlay with animated minecraft pattern */}
+        <div 
+          className="absolute inset-0 bg-gradient-to-b from-transparent to-spotify-darkGray opacity-70"
+          style={{
+            backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.7)), 
+                              url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='4' height='4' fill='%235D8731' fill-opacity='0.1'/%3E%3Crect x='4' width='4' height='4' fill='%2367943A' fill-opacity='0.1'/%3E%3Crect x='8' width='4' height='4' fill='%235D8731' fill-opacity='0.1'/%3E%3Crect x='12' width='4' height='4' fill='%2367943A' fill-opacity='0.1'/%3E%3Crect y='4' width='4' height='4' fill='%2367943A' fill-opacity='0.1'/%3E%3Crect x='4' y='4' width='4' height='4' fill='%235D8731' fill-opacity='0.1'/%3E%3Crect x='8' y='4' width='4' height='4' fill='%2367943A' fill-opacity='0.1'/%3E%3Crect x='12' y='4' width='4' height='4' fill='%235D8731' fill-opacity='0.1'/%3E%3C/svg%3E")`,
+            backgroundRepeat: 'repeat',
+            imageRendering: 'pixelated'
+          }}
+        ></div>
         
         <Button 
           variant="outline" 
           size="sm" 
           className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 border-none text-white"
-          onClick={handleChangeBanner}
+          onClick={() => setShowChangeBanner(true)}
         >
           <Image size={14} className="mr-1" />
           Change Banner
@@ -102,60 +141,62 @@ const UserProfile = () => {
       {/* Profile header */}
       <div className="flex flex-col md:flex-row items-center gap-6 px-6 -mt-16 mb-8 relative z-10">
         <div className="relative">
-          <div className="w-32 h-32 md:w-40 md:h-40 pixel-border bg-craft-stone overflow-hidden">
+          <div className="w-32 h-32 md:w-40 md:h-40 pixel-border bg-craft-stone overflow-hidden animate-[pulse_3s_ease-in-out_infinite]">
             <img 
-              src={user.avatarUrl} 
+              src={avatarImage} 
               alt={user.username} 
               className="w-full h-full object-cover"
               style={{imageRendering: 'pixelated'}}
             />
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            className="absolute bottom-2 right-2 bg-black/50 hover:bg-black/70 border-none rounded-full p-2 h-auto text-white"
-            onClick={handleChangeAvatar}
-          >
+          <label htmlFor="avatar-upload" className="absolute bottom-2 right-2 bg-black/50 hover:bg-black/70 border-none rounded-full p-2 h-auto text-white cursor-pointer">
             <Image size={14} />
-          </Button>
+          </label>
+          <input 
+            id="avatar-upload"
+            type="file"
+            accept="image/*"
+            onChange={handleAvatarUpload}
+            className="hidden"
+          />
         </div>
         
         <div className="text-center md:text-left mt-4 md:mt-10">
-          <div className="text-sm font-minecraft uppercase text-gray-400 mb-1">Profile</div>
-          <h1 className="text-3xl md:text-5xl font-minecraft text-white mb-2">{user.username}</h1>
+          <div className="text-sm font-minecraft uppercase text-gray-400 mb-1 animate-fade-in">Profile</div>
+          <h1 className="text-3xl md:text-5xl font-minecraft text-white mb-2 animate-fade-in">{user.username}</h1>
           {user.bio && (
-            <p className="text-sm font-minecraft text-gray-300 mb-3 max-w-md">{user.bio}</p>
+            <p className="text-sm font-minecraft text-gray-300 mb-3 max-w-md animate-fade-in">{user.bio}</p>
           )}
-          <div className="flex flex-wrap gap-2 mb-4">
-            {user.favoriteGenres.map((genre, index) => (
+          <div className="flex flex-wrap gap-2 mb-4 animate-fade-in">
+            {selectedGenres.map((genre, index) => (
               <span 
                 key={index}
-                className="bg-spotify-lightBlack px-3 py-1 text-xs font-minecraft text-gray-300 inline-flex items-center"
+                className="bg-spotify-lightBlack px-3 py-1 text-xs font-minecraft text-gray-300 inline-flex items-center hover-scale"
               >
                 <Star size={12} className="mr-1 text-spotify-green" />
                 {genre}
               </span>
             ))}
           </div>
-          <div className="flex flex-wrap gap-3 mb-4 justify-center md:justify-start">
+          <div className="flex flex-wrap gap-3 mb-4 justify-center md:justify-start animate-fade-in">
             <button
               onClick={() => setShowFollowers(true)}
-              className="text-sm font-minecraft text-gray-300 hover:text-white transition-colors flex items-center gap-1"
+              className="text-sm font-minecraft text-gray-300 hover:text-white transition-colors flex items-center gap-1 hover-scale"
             >
               <span className="text-white">{user.followers}</span> Followers
             </button>
             <span className="text-gray-500">•</span>
             <button
               onClick={() => setShowFollowing(true)}
-              className="text-sm font-minecraft text-gray-300 hover:text-white transition-colors flex items-center gap-1"
+              className="text-sm font-minecraft text-gray-300 hover:text-white transition-colors flex items-center gap-1 hover-scale"
             >
               <span className="text-white">{user.following}</span> Following
             </button>
           </div>
-          <div className="flex flex-wrap gap-3 justify-center md:justify-start">
+          <div className="flex flex-wrap gap-3 justify-center md:justify-start animate-fade-in">
             <Button 
               onClick={() => setShowEditProfile(true)}
-              className="font-minecraft text-xs pixel-button bg-craft-grass hover:bg-craft-grass/80 text-white border-craft-bedrock"
+              className="font-minecraft text-xs pixel-button bg-craft-grass hover:bg-craft-grass/80 text-white border-craft-bedrock hover-scale"
               size="sm"
             >
               <Edit size={14} className="mr-1" /> Edit Profile
@@ -164,7 +205,7 @@ const UserProfile = () => {
               <Button 
                 variant="outline" 
                 size="sm"
-                className="font-minecraft text-xs pixel-button bg-craft-stone hover:bg-craft-stone/80 text-white border-craft-bedrock"
+                className="font-minecraft text-xs pixel-button bg-craft-stone hover:bg-craft-stone/80 text-white border-craft-bedrock hover-scale"
               >
                 Logout
               </Button>
@@ -178,25 +219,25 @@ const UserProfile = () => {
         <TabsList className="bg-spotify-lightBlack mb-6 border-b border-gray-800 w-full justify-start h-auto overflow-x-auto minecraft-scrollbar">
           <TabsTrigger 
             value="playlists" 
-            className="font-minecraft text-sm data-[state=active]:text-spotify-green data-[state=active]:border-b-2 data-[state=active]:border-spotify-green rounded-none px-6 py-3"
+            className="font-minecraft text-sm data-[state=active]:text-spotify-green data-[state=active]:border-b-2 data-[state=active]:border-spotify-green rounded-none px-6 py-3 hover-scale"
           >
             <Disc size={16} className="mr-2" /> Playlists
           </TabsTrigger>
           <TabsTrigger 
             value="artists" 
-            className="font-minecraft text-sm data-[state=active]:text-spotify-green data-[state=active]:border-b-2 data-[state=active]:border-spotify-green rounded-none px-6 py-3"
+            className="font-minecraft text-sm data-[state=active]:text-spotify-green data-[state=active]:border-b-2 data-[state=active]:border-spotify-green rounded-none px-6 py-3 hover-scale"
           >
             <UserIcon size={16} className="mr-2" /> Artists
           </TabsTrigger>
           <TabsTrigger 
             value="albums" 
-            className="font-minecraft text-sm data-[state=active]:text-spotify-green data-[state=active]:border-b-2 data-[state=active]:border-spotify-green rounded-none px-6 py-3"
+            className="font-minecraft text-sm data-[state=active]:text-spotify-green data-[state=active]:border-b-2 data-[state=active]:border-spotify-green rounded-none px-6 py-3 hover-scale"
           >
             <Music size={16} className="mr-2" /> Albums
           </TabsTrigger>
           <TabsTrigger 
             value="favorites" 
-            className="font-minecraft text-sm data-[state=active]:text-spotify-green data-[state=active]:border-b-2 data-[state=active]:border-spotify-green rounded-none px-6 py-3"
+            className="font-minecraft text-sm data-[state=active]:text-spotify-green data-[state=active]:border-b-2 data-[state=active]:border-spotify-green rounded-none px-6 py-3 hover-scale"
           >
             <Heart size={16} className="mr-2" /> Favorites
           </TabsTrigger>
@@ -215,7 +256,7 @@ const UserProfile = () => {
             ))}
             <Link
               to="/create-playlist"
-              className="group bg-spotify-lightBlack p-4 rounded-none transition-colors hover:bg-gray-800 minecraft-card flex flex-col items-center justify-center aspect-square"
+              className="group bg-spotify-lightBlack p-4 rounded-none transition-colors hover:bg-gray-800 minecraft-card flex flex-col items-center justify-center aspect-square hover-scale"
             >
               <div className="w-16 h-16 bg-craft-stone flex items-center justify-center mb-4 pixel-border">
                 <span className="text-3xl text-white font-minecraft">+</span>
@@ -262,7 +303,7 @@ const UserProfile = () => {
               {savedAlbums.slice(0, 5).map((song, i) => (
                 <div 
                   key={i} 
-                  className="flex items-center gap-3 p-2 hover:bg-gray-800 transition-colors group cursor-pointer"
+                  className="flex items-center gap-3 p-2 hover:bg-gray-800 transition-colors group cursor-pointer hover-scale"
                 >
                   <div className="w-6 text-center font-minecraft text-gray-400">{i + 1}</div>
                   <img 
@@ -295,7 +336,7 @@ const UserProfile = () => {
       
       {/* Followers Dialog */}
       <Dialog open={showFollowers} onOpenChange={setShowFollowers}>
-        <DialogContent className="bg-spotify-black border-gray-700 minecraft-card">
+        <DialogContent className="bg-spotify-black border-gray-700 minecraft-card max-w-lg">
           <DialogHeader>
             <DialogTitle className="font-minecraft text-white">Followers</DialogTitle>
           </DialogHeader>
@@ -318,9 +359,9 @@ const UserProfile = () => {
                 <Button 
                   variant="outline" 
                   size="sm" 
-                  className="ml-auto font-minecraft text-xs bg-transparent"
+                  className={`ml-auto font-minecraft text-xs ${follower.isFollowing ? 'bg-transparent' : 'bg-craft-grass text-white hover:bg-craft-grass/80'}`}
                 >
-                  Follow Back
+                  {follower.isFollowing ? 'Following' : 'Follow Back'}
                 </Button>
               </Link>
             ))}
@@ -330,7 +371,7 @@ const UserProfile = () => {
       
       {/* Following Dialog */}
       <Dialog open={showFollowing} onOpenChange={setShowFollowing}>
-        <DialogContent className="bg-spotify-black border-gray-700 minecraft-card">
+        <DialogContent className="bg-spotify-black border-gray-700 minecraft-card max-w-lg">
           <DialogHeader>
             <DialogTitle className="font-minecraft text-white">Following</DialogTitle>
           </DialogHeader>
@@ -405,15 +446,17 @@ const UserProfile = () => {
                 Favorite Music Genres
               </label>
               <div className="flex flex-wrap gap-2">
-                {["Ambient", "Chiptune", "Electronic", "Soundtrack", "Lo-Fi", "Retro", "Indie"].map((genre) => (
+                {allGenres.map((genre) => (
                   <div 
                     key={genre} 
-                    className={`px-3 py-1 border ${user.favoriteGenres.includes(genre) 
-                      ? 'bg-craft-grass text-white' 
-                      : 'bg-spotify-lightBlack text-gray-300 border-gray-700'} 
-                      font-minecraft text-xs cursor-pointer hover:bg-gray-800 transition-colors`}
+                    className={`px-3 py-1 ${selectedGenres.includes(genre) 
+                      ? 'bg-craft-grass text-white cursor-pointer hover:bg-craft-grass/80' 
+                      : 'bg-spotify-lightBlack text-gray-300 border-gray-700 cursor-pointer hover:bg-gray-800'} 
+                      font-minecraft text-xs transition-colors`}
+                    onClick={() => toggleGenre(genre)}
                   >
                     {genre}
+                    {selectedGenres.includes(genre) && <span className="ml-1">✓</span>}
                   </div>
                 ))}
               </div>
@@ -427,6 +470,57 @@ const UserProfile = () => {
               </Button>
             </div>
           </form>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Change Banner Dialog */}
+      <Dialog open={showChangeBanner} onOpenChange={setShowChangeBanner}>
+        <DialogContent className="bg-spotify-black border-gray-700 minecraft-card">
+          <DialogHeader>
+            <DialogTitle className="font-minecraft text-white">Change Banner Image</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="w-full aspect-video bg-gray-800 relative overflow-hidden">
+              {bannerImage ? (
+                <img 
+                  src={bannerImage}
+                  alt="Banner Preview" 
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="flex items-center justify-center h-full">
+                  <span className="font-minecraft text-gray-400">No banner image</span>
+                </div>
+              )}
+            </div>
+            
+            <div className="pt-4 space-y-4">
+              <Input
+                id="banner-upload"
+                type="file"
+                accept="image/*"
+                onChange={handleBannerUpload}
+                className="pixel-input"
+              />
+              
+              <div className="flex justify-end gap-2">
+                <Button 
+                  type="button" 
+                  variant="ghost" 
+                  onClick={() => setShowChangeBanner(false)}
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  type="button"
+                  onClick={() => setShowChangeBanner(false)}
+                  className="font-minecraft text-xs pixel-button bg-craft-grass hover:bg-craft-grass/80 text-white border-craft-bedrock"
+                >
+                  Save Banner
+                </Button>
+              </div>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </div>

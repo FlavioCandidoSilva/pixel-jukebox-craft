@@ -1,4 +1,5 @@
 
+import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -13,6 +14,7 @@ import PlaylistView from "./pages/PlaylistView";
 import ArtistView from "./pages/ArtistView";
 import UserProfile from "./pages/UserProfile";
 import NotFound from "./pages/NotFound";
+import ServerError from "./pages/ServerError";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import CreatePlaylist from "./pages/CreatePlaylist";
@@ -26,6 +28,9 @@ import SeeAllArtists from "./pages/SeeAllArtists";
 import TopMusic from "./pages/TopMusic";
 import AIAssistant from "./pages/AIAssistant";
 import Podcasts from "./pages/Podcasts";
+import ComponentsShowcase from "./pages/ComponentsShowcase";
+import Pricing from "./pages/Pricing";
+import Notifications from "./pages/Notifications";
 
 const queryClient = new QueryClient();
 
@@ -58,6 +63,10 @@ const App = () => (
             <Route path="/top-music" element={<TopMusic />} />
             <Route path="/ai-assistant" element={<AIAssistant />} />
             <Route path="/podcasts" element={<Podcasts />} />
+            <Route path="/components" element={<ComponentsShowcase />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/notifications" element={<Notifications />} />
+            <Route path="/server-error" element={<ServerError />} />
           </Route>
           
           <Route path="*" element={<NotFound />} />
