@@ -13,12 +13,6 @@ const Footer = () => {
   return (
     <footer className="fixed bottom-0 left-0 right-0 bg-spotify-black h-20 border-t border-gray-800 z-30 px-4">
       <div className="max-w-screen-2xl mx-auto h-full flex items-center justify-between">
-        {/* Minecraft grass detail on top of the music bar */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-craft-grass" style={{ 
-          backgroundImage: 'repeating-linear-gradient(to right, transparent, transparent 8px, rgba(0,0,0,0.2) 8px, rgba(0,0,0,0.2) 16px)',
-          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.3)' 
-        }}></div>
-        
         {/* Now playing */}
         <div className="flex items-center gap-4 w-1/4">
           <div className="w-12 h-12 bg-craft-stone pixel-border shrink-0 hover-scale group cursor-pointer">

@@ -7,14 +7,15 @@ interface SongRowProps {
   album: string;
   duration: string;
   imageUrl: string;
-  index: number;
+  index?: number;
+  isLiked?: boolean;
 }
 
-const SongRow = ({ title, artist, album, duration, imageUrl, index }: SongRowProps) => {
+const SongRow = ({ title, artist, album, duration, imageUrl, index, isLiked = false }: SongRowProps) => {
   return (
     <div className="group grid grid-cols-[16px_4fr_3fr_1fr] md:grid-cols-[16px_6fr_4fr_3fr_1fr] gap-4 px-4 py-2 items-center hover:bg-spotify-lightBlack rounded-none">
       <div className="text-sm text-gray-400 group-hover:hidden font-minecraft">
-        {index}
+        {index !== undefined ? index : "•"}
       </div>
       <button className="hidden group-hover:block text-white">
         <Play size={14} />
@@ -40,8 +41,8 @@ const SongRow = ({ title, artist, album, duration, imageUrl, index }: SongRowPro
       </div>
       
       <div className="flex items-center gap-8 justify-end">
-        <button className="text-gray-400 opacity-0 group-hover:opacity-100 hover:text-spotify-green transition-colors">
-          <Heart size={16} />
+        <button className={`${isLiked ? "text-spotify-green" : "text-gray-400"} opacity-0 group-hover:opacity-100 hover:text-spotify-green transition-colors`}>
+          <Heart size={16} fill={isLiked ? "currentColor" : "none"} />
         </button>
         <span className="text-sm text-gray-400 font-minecraft">{duration}</span>
       </div>

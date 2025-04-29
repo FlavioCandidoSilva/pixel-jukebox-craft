@@ -1,12 +1,14 @@
 
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Home, Search, BookOpen, Plus, Heart, User, Music, Settings, LogOut } from "lucide-react";
+import { Home, Search, BookOpen, Plus, Heart, User, Music, Settings, LogOut, TrendingUp, Bot, Podcast, Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
 
 export const Sidebar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [hasNotifications, setHasNotifications] = useState(true);
   const location = useLocation();
   
   return (
@@ -44,11 +46,35 @@ export const Sidebar = () => {
               <NavLink to="/library" icon={<BookOpen size={20} />} label="Your Library" isActive={location.pathname === '/library'} />
             </div>
             
+            <div className="space-y-1">
+              <NavLink to="/top-music" icon={<TrendingUp size={20} />} label="Top Music" isActive={location.pathname === '/top-music'} />
+              <NavLink 
+                to="/ai-assistant" 
+                icon={<Bot size={20} />} 
+                label="AI Assistant" 
+                isActive={location.pathname === '/ai-assistant'}
+              />
+              <NavLink 
+                to="/podcasts" 
+                icon={<Podcast size={20} />} 
+                label="Podcasts" 
+                isActive={location.pathname === '/podcasts'} 
+                badge={<Badge className="bg-craft-grass text-xs">New</Badge>}
+              />
+            </div>
+            
             <div className="pt-4">
               <div className="space-y-1">
                 <NavLink to="/add-content" icon={<Music size={20} />} label="Add Content" isActive={location.pathname === '/add-content'} />
                 <NavLink to="/create-playlist" icon={<Plus size={20} />} label="Create Playlist" isActive={location.pathname === '/create-playlist'} />
                 <NavLink to="/liked-songs" icon={<Heart size={20} />} label="Liked Songs" isActive={location.pathname === '/liked-songs'} />
+                <NavLink 
+                  to="/notifications" 
+                  icon={<Bell size={20} />} 
+                  label="Notifications" 
+                  isActive={location.pathname === '/notifications'}
+                  badge={hasNotifications ? <div className="w-2 h-2 rounded-full bg-craft-grass"></div> : undefined}
+                />
               </div>
               
               <div className="border-t border-gray-800 my-4"></div>
@@ -110,7 +136,7 @@ export const Sidebar = () => {
   );
 };
 
-const NavLink = ({ to, icon, label, isActive }: { to: string; icon: React.ReactNode; label: string; isActive: boolean }) => (
+const NavLink = ({ to, icon, label, isActive, badge }: { to: string; icon: React.ReactNode; label: string; isActive: boolean; badge?: React.ReactNode }) => (
   <Link 
     to={to} 
     className={cn(
@@ -120,6 +146,7 @@ const NavLink = ({ to, icon, label, isActive }: { to: string; icon: React.ReactN
   >
     {icon}
     <span>{label}</span>
+    {badge && <div className="ml-auto">{badge}</div>}
   </Link>
 );
 

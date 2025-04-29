@@ -23,6 +23,9 @@ import AddContent from "./pages/AddContent";
 import SeeAllPlaylists from "./pages/SeeAllPlaylists";
 import SeeAllAlbums from "./pages/SeeAllAlbums";
 import SeeAllArtists from "./pages/SeeAllArtists";
+import TopMusic from "./pages/TopMusic";
+import AIAssistant from "./pages/AIAssistant";
+import Podcasts from "./pages/Podcasts";
 
 const queryClient = new QueryClient();
 
@@ -52,6 +55,9 @@ const App = () => (
             <Route path="/see-all-playlists" element={<SeeAllPlaylists />} />
             <Route path="/see-all-albums" element={<SeeAllAlbums />} />
             <Route path="/see-all-artists" element={<SeeAllArtists />} />
+            <Route path="/top-music" element={<TopMusic />} />
+            <Route path="/ai-assistant" element={<AIAssistant />} />
+            <Route path="/podcasts" element={<Podcasts />} />
           </Route>
           
           <Route path="*" element={<NotFound />} />
