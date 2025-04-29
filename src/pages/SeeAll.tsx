@@ -1,4 +1,3 @@
-
 import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import AlbumCard from "@/components/ui/AlbumCard";
@@ -8,7 +7,6 @@ import SongRow from "@/components/ui/SongRow";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, Filter } from "lucide-react";
 
-// Mock data for the different sections
 const mockData = {
   topAlbums: Array.from({ length: 20 }, (_, i) => ({
     id: `album-${i + 1}`,
@@ -55,7 +53,6 @@ const SeeAll = () => {
   const [sectionTitle, setSectionTitle] = useState("");
   const itemsPerPage = 12;
   
-  // Determine the title and data based on the section parameter
   useEffect(() => {
     let data: any[] = [];
     let title = "";
@@ -91,12 +88,10 @@ const SeeAll = () => {
     setSectionTitle(title);
   }, [section]);
   
-  // Calculate pagination info
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentItems = filteredData.slice(startIndex, startIndex + itemsPerPage);
   
-  // Pagination handlers
   const goToNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(current => current + 1);
@@ -175,14 +170,15 @@ const SeeAll = () => {
           <div className="flex flex-col gap-1">
             {currentItems.map((song, index) => (
               <SongRow
-                key={song.id}
-                position={startIndex + index + 1}
+                key={song.id || index}
+                position={index + 1}
                 title={song.title}
                 artist={song.artist}
                 album={song.album}
                 duration={song.duration}
-                imageSrc={song.imageUrl}
-                isLiked={Math.random() > 0.5}
+                imageSrc={song.imageSrc}
+                imageUrl={song.imageSrc}
+                isLiked={song.isLiked}
               />
             ))}
           </div>
@@ -194,7 +190,6 @@ const SeeAll = () => {
 
   return (
     <div className="pb-24">
-      {/* Header with Minecraft grass block texture */}
       <div className="relative">
         <div 
           className="h-16 w-full bg-craft-grass/60 absolute top-0 left-0"
@@ -226,12 +221,10 @@ const SeeAll = () => {
         </div>
       </div>
       
-      {/* Content */}
       <div className="px-6 mt-6 animate-[fade-in_0.4s_ease-out]">
         {renderContent()}
       </div>
       
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-between items-center mt-8 px-6">
           <Button 

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -265,6 +264,7 @@ const CreatePlaylist = () => {
                           album={song.album}
                           duration={song.duration}
                           imageSrc={song.imageSrc}
+                          imageUrl={song.imageSrc} // Add this line to fix the TypeScript error
                         />
                         <Button 
                           onClick={() => addSong(song)} 
@@ -305,6 +305,7 @@ const CreatePlaylist = () => {
                           album={song.album}
                           duration={song.duration}
                           imageSrc={song.imageSrc}
+                          imageUrl={song.imageSrc} // Add this line to fix the TypeScript error
                         />
                         <Button 
                           onClick={() => removeSong(song.id)} 

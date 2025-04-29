@@ -1,45 +1,45 @@
+import React from "react";
+import { Heart, MoreHorizontal, Play } from "lucide-react";
 
-import { Play, Heart } from "lucide-react";
-import { 
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-
-interface SongRowProps {
+export interface SongRowProps {
+  position?: number;
+  index?: number; // For backward compatibility
   title: string;
   artist: string;
   album: string;
   duration: string;
   imageUrl: string;
-  index?: number;
+  imageSrc?: string; // Add this optional prop for backward compatibility
   isLiked?: boolean;
-  // For backward compatibility
-  imageSrc?: string;
-  position?: number;
+  onPlay?: () => void;
+  onLike?: () => void;
+  onOptionsClick?: () => void;
 }
 
 const SongRow = ({ 
+  position, 
+  index, // For backward compatibility
   title, 
   artist, 
   album, 
   duration, 
   imageUrl, 
-  imageSrc, 
-  index, 
-  position, 
-  isLiked = false 
+  imageSrc, // For backward compatibility
+  isLiked = false,
+  onPlay, 
+  onLike, 
+  onOptionsClick 
 }: SongRowProps) => {
-  // Use imageUrl as the primary source, but fall back to imageSrc for backward compatibility
-  const imageSource = imageUrl || imageSrc;
-  // Use index as the primary display number, but fall back to position for backward compatibility
-  const displayNumber = index !== undefined ? index : (position !== undefined ? position : "•");
+  // Use position if provided, fall back to index, or default to 0
+  const displayPosition = position !== undefined ? position : (index !== undefined ? index : 0);
   
+  // Use imageUrl if provided, fall back to imageSrc
+  const displayImage = imageUrl || imageSrc || "";
+
   return (
     <div className="group grid grid-cols-[16px_4fr_3fr_1fr] md:grid-cols-[16px_6fr_4fr_3fr_1fr] gap-4 px-4 py-2 items-center hover:bg-spotify-lightBlack rounded-none transition-colors duration-200">
       <div className="text-sm text-gray-400 group-hover:hidden font-minecraft">
-        {displayNumber}
+        {displayPosition}
       </div>
       <button className="hidden group-hover:block text-white">
         <Play size={14} />
@@ -48,7 +48,7 @@ const SongRow = ({
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 bg-craft-stone flex-shrink-0">
           <img 
-            src={imageSource} 
+            src={displayImage} 
             alt={title} 
             className="w-full h-full object-cover"
             style={{ imageRendering: 'pixelated' }}

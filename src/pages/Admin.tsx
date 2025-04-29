@@ -46,7 +46,8 @@ import {
   Edit, 
   Trash, 
   Shield, 
-  AlertTriangle 
+  AlertTriangle,
+  Copy
 } from "lucide-react";
 import { toast } from "sonner";
 
