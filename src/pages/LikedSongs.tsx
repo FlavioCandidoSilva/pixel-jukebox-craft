@@ -1,7 +1,8 @@
 
 import { useState } from "react";
-import { Heart, Clock, MoreHorizontal, Play } from "lucide-react";
+import { Heart, Clock, MoreHorizontal, Play, Search } from "lucide-react";
 import SongRow from "@/components/ui/SongRow";
+import { Input } from "@/components/ui/input";
 
 type SongType = {
   id: string;
@@ -14,6 +15,7 @@ type SongType = {
 };
 
 const LikedSongs = () => {
+  const [searchQuery, setSearchQuery] = useState("");
   const [likedSongs, setLikedSongs] = useState<SongType[]>([
     { 
       id: "song-1", 
@@ -66,6 +68,13 @@ const LikedSongs = () => {
     setLikedSongs(likedSongs.filter(song => song.id !== id));
   };
 
+  // Filter songs based on search query
+  const filteredSongs = likedSongs.filter(song => 
+    song.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    song.artist.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    song.album.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="pb-12">
       {/* Header */}
@@ -84,13 +93,24 @@ const LikedSongs = () => {
       </div>
       
       {/* Play button and controls */}
-      <div className="flex items-center gap-4 mb-8">
+      <div className="flex items-center justify-between gap-4 mb-8">
         <button 
           className="bg-spotify-green w-14 h-14 pixel-border rounded-none flex items-center justify-center hover:bg-spotify-green/90 transition-all"
           aria-label="Play"
         >
           <Play size={24} fill="black" stroke="black" />
         </button>
+
+        {/* Search input */}
+        <div className="relative max-w-md w-full">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+          <Input
+            className="pl-10 bg-gray-800 border-gray-700 text-white font-minecraft placeholder:text-gray-400 h-10"
+            placeholder="Search in liked songs"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
       </div>
       
       {/* Songs list */}
@@ -107,9 +127,9 @@ const LikedSongs = () => {
         </div>
         
         {/* Song rows */}
-        {likedSongs.length > 0 ? (
+        {filteredSongs.length > 0 ? (
           <div className="divide-y divide-gray-800">
-            {likedSongs.map((song, index) => (
+            {filteredSongs.map((song, index) => (
               <div key={song.id} className="grid grid-cols-[16px,4fr,3fr,2fr,minmax(60px,1fr)] px-4 py-2 text-sm font-minecraft hover:bg-gray-800/50 group">
                 <div className="flex items-center justify-center text-gray-400 group-hover:text-white">
                   {index + 1}
@@ -148,6 +168,14 @@ const LikedSongs = () => {
                 </div>
               </div>
             ))}
+          </div>
+        ) : searchQuery ? (
+          <div className="flex flex-col items-center justify-center py-12">
+            <div className="w-16 h-16 bg-craft-stone flex items-center justify-center pixel-border mb-4">
+              <Search size={24} className="text-gray-400" />
+            </div>
+            <h3 className="font-minecraft text-white text-lg mb-2">No songs found</h3>
+            <p className="font-minecraft text-gray-400 text-sm">Try a different search term</p>
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-12">

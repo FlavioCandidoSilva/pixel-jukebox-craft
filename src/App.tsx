@@ -33,6 +33,7 @@ import ComponentsShowcase from "./pages/ComponentsShowcase";
 import Pricing from "./pages/Pricing";
 import Notifications from "./pages/Notifications";
 import CollaborativePlaylist from "./pages/CollaborativePlaylist";
+import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
 
@@ -70,6 +71,7 @@ const App = () => (
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/collaborative/:playlistId" element={<CollaborativePlaylist />} />
+            <Route path="/settings" element={<Settings />} />
             <Route path="/server-error" element={<ServerError />} />
           </Route>
           

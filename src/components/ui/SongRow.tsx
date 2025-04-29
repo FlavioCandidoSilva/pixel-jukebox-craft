@@ -93,7 +93,7 @@ const SongRow = ({
         <p className="text-sm text-gray-400 truncate font-minecraft">{album}</p>
       </div>
       
-      <div className="flex items-center gap-8 justify-end">
+      <div className="flex items-center gap-4 md:gap-8 justify-end">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>

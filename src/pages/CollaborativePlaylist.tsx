@@ -1,7 +1,7 @@
 
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { ArrowLeft, Heart, Music2, Play, Settings, UserPlus, Users } from "lucide-react";
+import { ArrowLeft, Heart, Music2, Play, Settings, UserPlus, Users, ThumbsUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SongRow from "@/components/ui/SongRow";
 import { Progress } from "@/components/ui/progress";
@@ -12,6 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 interface Song {
   id: string;
@@ -21,6 +22,7 @@ interface Song {
   duration: string;
   imageUrl: string;
   isLiked?: boolean;
+  votes?: number;
 }
 
 interface User {
@@ -32,11 +34,51 @@ interface User {
 }
 
 const mockSongs: Song[] = [
-  { id: "1", title: "Diggy Diggy Hole", artist: "YOGSCAST", album: "Songs from the Depths", duration: "3:04", imageUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475" },
-  { id: "2", title: "Cave Sounds 1", artist: "C418", album: "Minecraft Volume Alpha", duration: "0:48", imageUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475" },
-  { id: "3", title: "Diamond Pickaxe", artist: "PixelBeats", album: "Note Block Symphonies", duration: "2:33", imageUrl: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5" },
-  { id: "4", title: "Deep Dark Descent", artist: "Lena Raine", album: "Minecraft: Caves & Cliffs", duration: "3:15", imageUrl: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7" },
-  { id: "5", title: "Iron Ore Jam", artist: "Noteblock Masters", album: "Minecraft Anthems", duration: "2:47", imageUrl: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b" },
+  { 
+    id: "1", 
+    title: "Diggy Diggy Hole", 
+    artist: "YOGSCAST", 
+    album: "Songs from the Depths", 
+    duration: "3:04", 
+    imageUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475", 
+    votes: 3 
+  },
+  { 
+    id: "2", 
+    title: "Cave Sounds 1", 
+    artist: "C418", 
+    album: "Minecraft Volume Alpha", 
+    duration: "0:48", 
+    imageUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475", 
+    votes: 1 
+  },
+  { 
+    id: "3", 
+    title: "Diamond Pickaxe", 
+    artist: "PixelBeats", 
+    album: "Note Block Symphonies", 
+    duration: "2:33", 
+    imageUrl: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5", 
+    votes: 5 
+  },
+  { 
+    id: "4", 
+    title: "Deep Dark Descent", 
+    artist: "Lena Raine", 
+    album: "Minecraft: Caves & Cliffs", 
+    duration: "3:15", 
+    imageUrl: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7", 
+    votes: 2 
+  },
+  { 
+    id: "5", 
+    title: "Iron Ore Jam", 
+    artist: "Noteblock Masters", 
+    album: "Minecraft Anthems", 
+    duration: "2:47", 
+    imageUrl: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b", 
+    votes: 0 
+  },
 ];
 
 const mockUsers: User[] = [
@@ -57,6 +99,7 @@ const CollaborativePlaylist = () => {
   const [showInviteDialog, setShowInviteDialog] = useState(false);
   const [showPermissionsDialog, setShowPermissionsDialog] = useState(false);
   const [currentUser] = useState<User>(mockUsers[0]); // Current user is Steve (the owner)
+  const [userVotes, setUserVotes] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     // In a real app, we would fetch this data based on the playlistId
@@ -80,6 +123,29 @@ const CollaborativePlaylist = () => {
 
   const currentSong = songs[currentSongIndex];
   const activeUsers = users.filter(user => user.isActive);
+
+  const handleSongVote = (songId: string) => {
+    if (userVotes[songId]) {
+      toast.error("You've already voted for this song!");
+      return;
+    }
+
+    setSongs(prevSongs => 
+      prevSongs.map(song => 
+        song.id === songId 
+          ? { ...song, votes: (song.votes || 0) + 1 } 
+          : song
+      )
+    );
+    
+    setUserVotes(prev => ({ ...prev, [songId]: true }));
+    toast.success("Vote cast successfully!");
+  };
+
+  // Sort songs by votes (except current song)
+  const sortedUpcomingSongs = [...songs]
+    .filter((_, index) => index !== currentSongIndex)
+    .sort((a, b) => (b.votes || 0) - (a.votes || 0));
 
   return (
     <div className="pb-24">
@@ -249,25 +315,58 @@ const CollaborativePlaylist = () => {
       
       {/* Queue */}
       <div className="px-6">
-        <h3 className="font-minecraft text-lg text-white mb-3">Up Next</h3>
+        <h3 className="font-minecraft text-lg text-white mb-3">Up Next (Vote for songs)</h3>
         <div className="space-y-1">
-          {songs.map((song, index) => (
-            <div className={`${currentSongIndex === index ? 'bg-purple-900/30' : ''} rounded-md`}>
-              <SongRow
-                key={song.id}
-                position={index + 1}
-                title={song.title}
-                artist={song.artist}
-                album={song.album}
-                duration={song.duration}
-                imageUrl={song.imageUrl}
-                isLiked={song.isLiked}
-              />
-              {currentSongIndex === index && (
-                <div className="px-6 pb-2">
-                  <Progress value={progress} className="h-1 bg-gray-800" />
+          {/* Current song */}
+          <div className="bg-purple-900/30 rounded-md mb-4">
+            <div className="flex justify-between items-center px-4 py-2">
+              <span className="font-minecraft text-sm text-white">Now Playing</span>
+            </div>
+            <SongRow
+              key={currentSong?.id}
+              position={1}
+              title={currentSong?.title || ""}
+              artist={currentSong?.artist || ""}
+              album={currentSong?.album || ""}
+              duration={currentSong?.duration || ""}
+              imageUrl={currentSong?.imageUrl || ""}
+              isLiked={currentSong?.isLiked}
+            />
+            <div className="px-6 pb-2">
+              <Progress value={progress} className="h-1 bg-gray-800" />
+            </div>
+          </div>
+
+          {/* Upcoming songs with voting */}
+          <h4 className="font-minecraft text-sm text-gray-300 mb-2 mt-4">Vote for upcoming songs</h4>
+          {sortedUpcomingSongs.map((song, index) => (
+            <div key={song.id} className="rounded-md bg-gray-800/40">
+              <div className="flex justify-between items-center">
+                <SongRow
+                  key={song.id}
+                  position={index + 2}
+                  title={song.title}
+                  artist={song.artist}
+                  album={song.album}
+                  duration={song.duration}
+                  imageUrl={song.imageUrl}
+                  isLiked={song.isLiked}
+                />
+                <div className="pr-4 flex items-center gap-2">
+                  <button 
+                    className={`px-2 py-1 rounded-md flex items-center gap-1 ${
+                      userVotes[song.id] 
+                        ? "bg-spotify-green/20 text-spotify-green" 
+                        : "bg-gray-700 hover:bg-gray-600 text-white"
+                    }`}
+                    onClick={() => handleSongVote(song.id)}
+                    disabled={!!userVotes[song.id]}
+                  >
+                    <ThumbsUp size={14} />
+                    <span className="text-xs font-minecraft">{song.votes || 0}</span>
+                  </button>
                 </div>
-              )}
+              </div>
             </div>
           ))}
         </div>
@@ -293,7 +392,15 @@ const CollaborativePlaylist = () => {
                   readOnly
                   className="bg-gray-700 text-sm p-2 rounded-l-md flex-1 font-minecraft"
                 />
-                <Button className="bg-spotify-green rounded-l-none text-black">Copy</Button>
+                <Button 
+                  className="bg-spotify-green rounded-l-none text-black"
+                  onClick={() => {
+                    navigator.clipboard.writeText("https://spoticraft.com/collaborative/party-mix");
+                    toast.success("Link copied to clipboard!");
+                  }}
+                >
+                  Copy
+                </Button>
               </div>
             </div>
             
@@ -304,6 +411,7 @@ const CollaborativePlaylist = () => {
                   <Button 
                     key={platform} 
                     className="bg-gray-800 hover:bg-gray-700 font-minecraft text-xs"
+                    onClick={() => toast.success(`Sharing via ${platform}...`)}
                   >
                     {platform}
                   </Button>
@@ -331,6 +439,7 @@ const CollaborativePlaylist = () => {
                 { text: "Who can skip songs", value: "Host Only" },
                 { text: "Who can invite others", value: "Everyone" },
                 { text: "Allow song requests", value: "Yes" },
+                { text: "Allow voting for songs", value: "Yes" },
               ].map(setting => (
                 <div key={setting.text} className="flex justify-between items-center p-2 hover:bg-gray-800 rounded">
                   <p className="font-minecraft text-sm">{setting.text}</p>
@@ -345,7 +454,13 @@ const CollaborativePlaylist = () => {
             </div>
             
             <div className="border-t border-gray-700 pt-4">
-              <Button className="w-full bg-spotify-green hover:bg-spotify-green/90 text-black font-minecraft">
+              <Button 
+                className="w-full bg-spotify-green hover:bg-spotify-green/90 text-black font-minecraft"
+                onClick={() => {
+                  setShowPermissionsDialog(false);
+                  toast.success("Settings saved successfully!");
+                }}
+              >
                 Save Settings
               </Button>
             </div>
